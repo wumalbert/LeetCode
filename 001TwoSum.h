@@ -1,48 +1,75 @@
-bool myCompare(pair<int, int> number1, pair<int, int> number2)
+bool myComp(pair<int, int> p1, pair<int, int> p2)
 {
-    return number1.first < number2.first;
+    return p1.first < p2.first;
 }
+class Solution01 {
+public:
+    vector<int> twoSum(vector<int> &numbers, int target) {
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        vector<int> ret;
+        if (numbers.size() < 2) return ret;
+        
+        vector<pair<int, int> > numberIndexs(numbers.size(), pair<int, int>(0, 0));
+        vector<pair<int, int> >::iterator left = numberIndexs.begin();
+        for(vector<int>::iterator i = numbers.begin(); i != numbers.end(); ++i)
+        {
+            left->first = *i;
+            left->second = i - numbers.begin() + 1;
+            ++left;
+        }
+        
+        sort(numberIndexs.begin(), numberIndexs.end(), myComp);
+        
+        left = numberIndexs.begin();
+        vector<pair<int, int> >::iterator right = numberIndexs.end() - 1;
+        while (left < right)
+        {
+            if (left->first + right->first == target)
+            {
+                if (left->second < right->second)
+                {
+                    ret.push_back(left->second);
+                    ret.push_back(right->second);
+                }
+                else
+                {
+                    ret.push_back(right->second);
+                    ret.push_back(left->second);
+                }
+                return ret;
+            }
+            else if(left->first + right->first < target)
+                ++left;
+            else --right;
+        }
+        
+        return ret;
+    }
+};
 
 class Solution {
 public:
     vector<int> twoSum(vector<int> &numbers, int target) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        vector<int> result;
-        vector< pair<int, int> > numberIndexPairs;
-        for (vector<int>::size_type i = 0, i < numbers.size(); ++i)
-        {
-            numberIndexPairs.push_back(make_pair(numbers[i], i));
-        }
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        vector<int> ret;
+        if (numbers.size() < 2) return ret;
         
-        sort(numberIndexPairs.begin(), numberIndexPairs.end(), myCompare);
+        map<int, int> numberMap;
         
-        vector< pair<int, int> >::size_type left, right;
-        left = 0;
-        right = numberIndexPairs.size()-1;
-        int sum = 0;
-        while(left < right)
+        for(int i = 0; i < numbers.size(); ++i)
         {
-            sum = numberIndexPairs[left].first + numberIndexPairs[right].first;
-            if (sum == target) break;
-            else if (sum < target) ++left;
-            else --right;
-        }
-        
-        if (left < right)
-        {
-            if (numberIndexPairs[left].second < numberIndexPairs[right].second)
+            if(numberMap.find(numbers[i]) == numberMap.end())
             {
-                result.push_back(numberIndexPairs[left].second + 1);
-                result.push_back(numberIndexPairs[right].second + 1);
+                numberMap[target - numbers[i]] = i+1;
             }
             else
             {
-                result.push_back(numberIndexPairs[right].second + 1);
-                result.push_back(numberIndexPairs[left].second + 1);
+                ret.push_back(numberMap[numbers[i]]);
+                ret.push_back(i+1);
+                break;
             }
         }
-        
-        return result;
+        sort(ret.begin(), ret.end());
+        return ret;
     }
 };
