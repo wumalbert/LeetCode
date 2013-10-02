@@ -5,27 +5,20 @@ public:
         if (!str) return 0;
         
         long long ret = 0;
-        bool negetive = false, start = false;
+        bool negetive = false;
         const char *p = str;
+        // skip the whitespace
         while('\0' != *p && (' ' == *p || '\t' == *p)) ++p;
-        while('\0' != *p)
-        {
-            if(isdigit(*p))
-            {
-                start = true;
-                ret *= 10;
-                ret += *p - '0';
-            }
-            else if('-' == *p && !start)
-            {
-                negetive = true;
-                start = true;
-            }
-            else if('+' == *p && !start)
-            {
-                start = true;
-            }
-            else break;
+        // get the sign mask
+        if ('-' == *p) {
+            negetive = true;
+            ++p;
+        }
+        else if('+' == *p) ++p;
+        
+        while(isdigit(*p)) {
+            ret *= 10;
+            ret += *p - '0';
             ++p;
         }
         if(negetive) ret = -ret;
