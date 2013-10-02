@@ -1,31 +1,50 @@
-class Solution {
-private:
-    void combineRecursive(int n, int k, int index, vector<int> combine, vector<vector<int> >& allCombines)
-    {
-        if (0 == k)
-        {
-            allCombines.push_back(combine);
-        }
-        else if (k > 0 && index <= n)
-        {
-            combine.push_back(index);
-            combineRecursive(n, k-1, index+1, combine, allCombines);
-        
-            combine.pop_back();
-            combineRecursive(n, k, index+1, combine, allCombines);
-        }
-        
-    }
-    
+class Solution01 {
 public:
     vector<vector<int> > combine(int n, int k) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        vector<vector<int> > ret, allCombines(1, vector<int>());
+        
+        for (int i = 1; i <= n; ++i)
+        {
+            for (int j = allCombines.size()-1; j >= 0; --j)
+            {
+                if (allCombines[j].size() == k-1)
+                {
+                    ret.push_back(allCombines[j]);
+                    ret.back().push_back(i);
+                    continue;
+                }
+                // the current combination corresponse to the one not choose i 
+                allCombines.push_back(allCombines[j]); // copy the current combination
+                allCombines.back().push_back(i); // choose i
+            }
+        }
+        
+        return ret;
+    }
+};
+
+class Solution {
+private:
+    // choose k numbers from [start, end)
+    void combineRecursive(int start, int end, int k, vector<int> &path, vector<vector<int> > &ans)
+    {
+        if (k > end - start) return;
+        if (0 == k) ans.push_back(path);
+        else
+        {
+            combineRecursive(start+1, end, k, path, ans);
+            path.push_back(start);
+            combineRecursive(start+1, end, k-1, path, ans);
+            path.pop_back();
+        }
+    }
+public:
+    vector<vector<int> > combine(int n, int k) {
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        vector<int> path;
         vector<vector<int> > ret;
-        vector<int> combine;
-        
-        combineRecursive(n, k, 1, combine, ret);
-        
+        combineRecursive(1, n+1, k, path, ret);
         return ret;
     }
 };
