@@ -1,53 +1,39 @@
 class Solution {
 public:
     int atoi(const char *str) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        if (!str) return 0;
         
-        static const int kError = 0; 
-        // the empty string
-        if (NULL == str) return kError;
-        
-        int i = 0;
-        bool isNeg = false;
-        
-        // find the first not blank charcter
-        for (;'\0' != str[i] && ' ' == str[i]; ++i);
-        
-        if ('-' == str[i])
+        long long ret = 0;
+        bool negetive = false, start = false;
+        const char *p = str;
+        while('\0' != *p && (' ' == *p || '\t' == *p)) ++p;
+        while('\0' != *p)
         {
-            isNeg = true;
-            ++i;
+            if(isdigit(*p))
+            {
+                start = true;
+                ret *= 10;
+                ret += *p - '0';
+            }
+            else if('-' == *p && !start)
+            {
+                negetive = true;
+                start = true;
+            }
+            else if('+' == *p && !start)
+            {
+                start = true;
+            }
+            else break;
+            ++p;
         }
-        else if ('+' == str[i])
-        {
-            ++i;
-        }
+        if(negetive) ret = -ret;
         
-        // find the first not zero charcter
-        for (;'\0' != str[i] && '0' == str[i]; ++i);
-        
-        double result = 0;
-        while('\0' != str[i])
-        {       
-            if (str[i]-'0' < 0 || str[i] - '0' > 9)
-                break;
-                
-            result *= 10;
-            result += str[i] - '0';
-            
-            if (result < 0) break;
-            
-            ++i;
-        }
-        
-        if (!isNeg && result < 0) return 0x7FFFFFFF;
-        if (isNeg && result < 0) return 0x80000000;
-        
-        if (!isNeg && result > 0x7FFFFFFF) return 0x7FFFFFFF;
-        if (isNeg && result > 0x80000000) return 0x80000000;
-        
-        return isNeg ? -result : result;
-        
+        if(ret > numeric_limits<int>::max())
+            return numeric_limits<int>::max();
+        else if(ret < numeric_limits<int>::min())
+            return numeric_limits<int>::min();
+        else return ret;
     }
 };
