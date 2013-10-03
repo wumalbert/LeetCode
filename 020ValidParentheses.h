@@ -1,36 +1,60 @@
+class Solution01 {
+public:
+    bool isValid(string s) {
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        int result = 0;
+        for (string::iterator itr = s.begin(); itr != s.end(); ++itr) {
+            int t = 0;
+            switch (*itr) {
+                case '(' : t = 1; break;
+                case ')' : t = -1; break;
+                case '[' : t = 2; break;
+                case ']' : t = -2; break;
+                case '{' : t = 3; break;
+                case '}' : t = -3; break;
+                default: return false;
+            }
+            if (t > 0) {
+                result = result * 4 + t;
+            } else {
+                if (result % 4 + t != 0) return false;
+                else result = result / 4;
+            }
+        }
+        if (0 == result) return true;
+        else return false;
+    }
+};
+
 class Solution {
 public:
     bool isValid(string s) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        stack<char> symbolStack;
-
-        for (size_t i = 0; i < s.length(); ++i)
-        {
-            switch (s[i])
-            {
-            case '(':
-            case '[':
-            case '{':
-                symbolStack.push(s[i]);
-                break;
-            case ')':
-                if (symbolStack.empty() || symbolStack.top() != '(')
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        stack<char> parentheses_stack;
+        for (string::iterator itr = s.begin(); itr != s.end(); ++itr) {
+            switch (*itr) {
+                case '(' :
+                case '[' :
+                case '{' :
+                    parentheses_stack.push(*itr);
+                    break;
+                case ')' :
+                    if (parentheses_stack.empty() || '(' != parentheses_stack.top()) return false;
+                    else parentheses_stack.pop();
+                    break;
+                case ']' :
+                    if (parentheses_stack.empty() || '[' != parentheses_stack.top()) return false;
+                    else parentheses_stack.pop();
+                    break;
+                case '}' :
+                    if (parentheses_stack.empty() || '{' != parentheses_stack.top()) return false;
+                    else parentheses_stack.pop();
+                    break;
+                default:
                     return false;
-                symbolStack.pop();
-                break;
-            case ']':
-                if (symbolStack.empty() || symbolStack.top() != '[')
-                    return false;
-                symbolStack.pop();
-                break;
-            case '}':
-                if (symbolStack.empty() || symbolStack.top() != '{')
-                    return false;
-                symbolStack.pop();
-                break;
             }
         }
-        return symbolStack.empty();
+        if (parentheses_stack.empty()) return true;
+        else return false;
     }
 };
