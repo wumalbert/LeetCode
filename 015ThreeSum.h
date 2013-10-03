@@ -1,44 +1,29 @@
 class Solution {
 public:
     vector<vector<int> > threeSum(vector<int> &num) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        vector< vector<int> > result;
-
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        vector<vector<int> > ret;
+        if(num.size() < 3) return ret;
+        
         sort(num.begin(), num.end());
-
-        for (size_t i = 0; i < num.size()-2; ++i)
+        for(vector<int>::const_iterator i = num.begin(); i != num.end(); ++i)
         {
-            if (i > 0 && num[i] == num[i-1]) continue;
-
-            size_t j = i+1;
-            size_t k = num.size()-1;
-
-            while (j < k)
+            if(i > num.begin() && *i == *(i-1)) continue;
+            vector<int>::const_iterator left = i+1, right = num.end()-1;
+            while(left < right)
             {
-                if (num[i] + num[j] + num[k] == 0)
-                {   
-                    vector<int> t(3, 0);
-                    t[0] = num[i];
-                    t[1] = num[j];
-                    t[2] = num[k];
-
-                    result.push_back(t);
-
-                    for (j = j+1; num[j] == num[j-1] && j < k; ++j);
-                    for (k = k-1; num[k] == num[k+1] && k > j; --k);
-                }
-                else if (num[i] + num[j] + num[k] < 0)
+                if(*i + *left + *right == 0)
                 {
-                    ++j;
+                    vector<int> v({*i, *left, *right});
+                    ret.push_back(v);
+                    
+                    for(++left; *left == *(left-1); ++left);
+                    for(--right; *right == *(right+1); --right);
                 }
-                else
-                {
-                    --k;
-                }
+                else if(*i + *left + *right < 0) ++left;
+                else --right;
             }
         }
-
-        return result;
+        return ret;
     }
 };
