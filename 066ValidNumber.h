@@ -1,71 +1,49 @@
 class Solution {
 public:
     bool isNumber(const char *s) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        // skip the whitespace in the beginning of the string
         if (!s) return false;
-        
-        const char *p;
-        for (p = s; '\0' != *p && ' ' == *p; ++p);
-        if ('\0' == *p) return false;
-        
-        bool hasDot = false;
-        bool hasExp = false;
-        if ('.' == *p)
-        {
-            hasDot = true;
-            char c = *(p+1);
-            if ('\0' == c || ('0' > c || '9' < c)) return false;
+        while (*s && (' ' == *s || '\t' == *s)) ++s;
+        if (!*s) return false;  // all whitespace
+        // skip the whitespace in the end of the string
+        const char *end;
+        for (end = s; *end; ++end) {}
+        for (--end; ' ' == *end || '\t' == *end; --end) {}
+        ++end;
+        // the sign symbol
+        if ('+' == *s || '-' == *s) { 
+            ++s;
+            if (s == end) return false;  // "+", "-"
         }
-        else if (('0' > *p || '9' < *p) && '+' != *p && '-' != *p) return false;
-        else if ('+' == *p || '-' == *p)
-        {
-            char c = *(p+1);
-            if ('\0' == c || (('0' > c || '9' < c) && '.' != c)) return false;
-            else if ('.' == c)
-            {
-                c = *(p+2);
-                if ('\0' == c || ('0' > c || '9' < c)) return false;
-            }
+        bool exponent_mask = false, dot_mask = false;
+        if ('e' == *s || 'E' == *s) {  // "e12"
+            return false;
+        } else if ('.' == *s) {
+            if (!isdigit(*(s+1))) return false;  // ".", ".e"
+            dot_mask = true;
+            ++s;
         }
-        
-        ++p;
-        while ('\0' != *p)
-        {
-            if ('e' == *p)
-            {
-                if (hasExp) return false;
-                hasExp = true;
-                
-                char c = *(p+1);
-                if ('\0' == c) return false;
-                if (('+' == c || '-' == c))
-                {
-                    if ('\0' == *(p+2)) return false;
-                    else ++p;
+        while (s != end) {
+            if (isdigit(*s)) {
+                ++s;
+            } else if ('.' == *s && !dot_mask && !exponent_mask) { // ".12.", "e1." 
+                dot_mask = true;
+                ++s;
+            } else if (('e' == *s || 'E' == *s) && !exponent_mask) { // "12e2e"
+                exponent_mask = true;
+                ++s;
+                if (s == end) { // "12e"
+                    return false; 
                 }
-                else if ('0' > c || '9' < c) return false; 
-                
-                ++p;
-                continue;
-            }
-            else if ('.' == *p)
-            {
-                if (hasDot || hasExp) return false;
-                hasDot = true;
-                
-                ++p;
-                continue;
-            }
-            else if (' ' == *p)
-                break;
-            else if ('0' > *p || '9' < *p)
+                else if ('+' == *s || '-' == *s) { 
+                    if (s+1 == end) return false; // "12e+"
+                    ++s;
+                }
+            } else {
                 return false;
-            ++p;
+            }
         }
-        
-        for (; '\0' != *p && ' ' == *p; ++p);
-        
-        return '\0' == *p;
+        return true;
     }
 };
