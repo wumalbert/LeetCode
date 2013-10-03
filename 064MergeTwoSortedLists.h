@@ -9,37 +9,20 @@
 class Solution {
 public:
     ListNode *mergeTwoLists(ListNode *l1, ListNode *l2) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        if (!l1) return l2;
-        if (!l2) return l1;
-        
-        ListNode *head = new ListNode(-1); // set a sentinel node
-        ListNode *tail = head;
-        
-        ListNode *p1 = l1, *p2 = l2;
-        while (p1 && p2)
-        {
-            if (p1->val < p2->val)
-            {
-                tail->next = p1;
-                p1 = p1->next;
-                tail = tail->next;
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        ListNode *ret = NULL;
+        ListNode **current = &ret;
+        while (l1 && l2) {
+            if (l1->val < l2->val) {
+                *current = l1;
+                l1 = l1->next;
+            } else {
+                *current = l2;
+                l2 = l2->next;
             }
-            else
-            {
-                tail->next = p2;
-                p2 = p2->next;
-                tail = tail->next;
-            }
+            current = &((*current)->next);
         }
-        
-        if (!p1) tail->next = p2;
-        else if (!p2) tail->next = p1;
-        
-        tail = head;
-        head = head->next;
-        delete tail;
-        return head;
+        *current = l1 ? l1 : l2;
+        return ret;
     }
 };
