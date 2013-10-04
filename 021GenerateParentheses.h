@@ -1,53 +1,78 @@
+// Iterator
+class Solution02 {
+public:
+    vector<string> generateParenthesis(int n) {
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        vector<vector<string> > all_parentheses;
+        all_parentheses.push_back(vector<string>(1, ""));
+        all_parentheses.push_back(vector<string>(1, "()"));
+        for (int i = 2; i <= n; ++i) {
+            vector<string> current_parentheses;
+            for (int j = 0; j < i; ++j) {
+                for (vector<string>::iterator it1 = all_parentheses[j].begin(); it1 != all_parentheses[j].end(); ++it1) {
+                    for (vector<string>::iterator it2 = all_parentheses[i-j-1].begin(); it2 != all_parentheses[i-j-1].end(); ++it2) {
+                        current_parentheses.push_back("("+*it1+")"+*it2);
+                    }
+                }
+            }
+            all_parentheses.push_back(current_parentheses);
+        }
+        return all_parentheses.back();
+    }
+};
+// Recursive
+class Solution01 {
+public:
+    vector<string> generateParenthesis(int n) {
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        string s;
+        vector<string> ret;
+        generateParenthesis(n, 0, s, ret);
+        return ret;
+    }
+private:
+    void generateParenthesis(int to_open, int opened, string &s, vector<string> &ans) {
+        if (to_open == 0 && opened == 0) {
+            ans.push_back(s);
+            return;
+        }
+        if (to_open > 0) {  // every positon have two choices, '(' or ')'
+            s += '(';
+            generateParenthesis(to_open-1, opened+1, s, ans);
+            s.erase(s.end()-1, s.end());
+        }
+        if (opened > 0) { 
+            s += ')';
+            generateParenthesis(to_open, opened-1, s, ans);
+            s.erase(s.end()-1, s.end());
+        }
+    }
+};
+// Recursive
 class Solution {
 public:
     vector<string> generateParenthesis(int n) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        static vector<vector<string> > parenMap;
-        if (n <= parenMap.size())
-        {
-            return parenMap[n-1];
-        }
-
-        if (1 == n)
-        {
-            parenMap.push_back(vector<string>(1, "()"));
-            return parenMap[0];
-        }
-
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        string s;
         vector<string> ret;
-        vector<string> r = generateParenthesis(n-1);
-        for (vector<string>::const_iterator i = r.begin(); i != r.end(); ++i) // (Fn-1)
-        {
-            ret.push_back("(" + *i + ")");
+        generateParenthesis(n, 0, 0, s, ret);
+        return ret;
+    }
+private:
+    void generateParenthesis(int n, int left, int right, string &s, vector<string> &ans) {
+        if (left == n) {
+            ans.push_back(s.append(n-right, ')'));
+            s.erase(s.end()-(n-right), s.end());
+            return;
         }
-
-        for (int i = 1; i < n; ++i)
-        {
-            vector<string> r1 = generateParenthesis(i);
-            vector<string> r2 = generateParenthesis(n-i);
-
-            for (vector<string>::const_iterator it1 = r1.begin(); it1 != r1.end(); ++it1)
-            {
-                for (vector<string>::const_iterator it2 = r2.begin(); it2 != r2.end(); ++it2)
-                {
-                    ret.push_back(*it1 + *it2);
-                }
-            }
+        // every positon have two choices, '(' or ')'
+        s += '(';
+        generateParenthesis(n, left+1, right, s, ans);
+        s.erase(s.end()-1, s.end());
+        if (left > right) {
+            s += ')';
+            generateParenthesis(n, left, right+1, s, ans);
+            s.erase(s.end()-1, s.end());
         }
-
-        sort(ret.begin(), ret.end());
-
-        r.clear();
-
-        r.push_back(ret[0]);
-        for (vector<string>::const_iterator i = ret.begin() + 1; i != ret.end(); ++i)
-        {
-            if (*i != *(i-1)) r.push_back(*i);
-        }
-
-        parenMap.push_back(r);
-
-        return r;
     }
 };
