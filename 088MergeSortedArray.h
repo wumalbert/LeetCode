@@ -1,23 +1,13 @@
 class Solution {
 public:
     void merge(int A[], int m, int B[], int n) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        int i = m-1, j = n-1, k = m+n-1;
-        while (i >= 0 && j >= 0)
-        {
-            if (A[i] < B[j]) A[k--] = B[j--];
-            else A[k--] = A[i--];
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        int *pa = A+m-1, *pb = B+n-1, *pd = A+m+n-1;
+        while (pa >= A && pb >= B) {
+            *pd-- = *pa > *pb ? *pa-- : *pb--;
         }
-        
-        while (i >= 0)
-        {
-            A[k--] = A[i--];
-        }
-        
-        while (j >= 0)
-        {
-            A[k--] = B[j--];
+        if (pa < A) {
+            while (pb >= B) *pd-- = *pb--;
         }
     }
 };
