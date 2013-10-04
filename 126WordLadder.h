@@ -117,45 +117,35 @@ public:
 class Solution {
 public:
     int ladderLength(string start, string end, unordered_set<string> &dict) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        
-        unordered_set<string> added;
-        queue<string> visitQueue;
-        
-        added.insert(start);
-        visitQueue.push(start);
-        int ret = 0;
-        int level0 = 1, level1 = 0;
-        while (!visitQueue.empty())
-        {
-            string s = visitQueue.front();
-            visitQueue.pop();
-            --level0;
-            
-            for (int i = 0; i < s.length(); ++i)
-            {
-                for (int j = 0; j < 26; ++j)
-                {
-                    string t(s);
-                    t[i] = 'a' + j;
-                    
-                    if (t == end) return ret + 2;
-                    
-                    if (dict.find(t) != dict.end() && added.find(t) == added.end())
-                    {
-                        added.insert(t);
-                        visitQueue.push(t);
-                        ++level1;
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        // BFS
+        unordered_set<string> visited_set;
+        queue<string> to_visit_queue;
+        int number_level0 = 1, number_level1 = 0, level = 0;
+        to_visit_queue.push(start);
+        visited_set.insert(start);
+        while (!to_visit_queue.empty()) {
+            string word(to_visit_queue.front());
+            to_visit_queue.pop();
+            --number_level0;
+            for (int i = 0; i < word.length(); ++i) {
+                int k = word[i] - 'a';
+                for (int j = 0; j < 26; ++j) {
+                    if (j == k) continue;
+                    word[i] = 'a' + j;
+                    if (word == end) return level+2;
+                    if (dict.find(word) != dict.end() && visited_set.find(word) == visited_set.end()) {
+                        to_visit_queue.push(word);
+                        visited_set.insert(word);
+                        ++number_level1;
                     }
                 }
+                word[i] = 'a' + k;
             }
-            
-            if (!level0)
-            {
-                ++ret;
-                level0 = level1;
-                level1 = 0;
+            if (0 == number_level0) {
+                number_level0 = number_level1;
+                number_level1 = 0;
+                ++level;
             }
         }
         return 0;
