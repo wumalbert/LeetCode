@@ -6,48 +6,60 @@
  *     ListNode(int x) : val(x), next(NULL) {}
  * };
  */
+class Solution01 {
+public:
+    ListNode *addTwoNumbers(ListNode *l1, ListNode *l2) {
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        ListNode *head = new ListNode(0);
+        ListNode *tail = head;
+        int carry = 0;
+        while (l1 && l2) {
+            tail->next = new ListNode((l1->val + l2->val + carry) % 10);
+            tail = tail->next;
+            carry = (l1->val + l2->val + carry) / 10;
+            l1 = l1->next;
+            l2 = l2->next;
+        }
+        if (!l2) l2 = l1;
+        while (l2) {
+            tail->next = new ListNode((l2->val + carry) % 10);
+            tail = tail->next;
+            carry = (l2->val + carry) / 10;
+            l2 = l2->next;
+        }
+        if (carry > 0) tail->next = new ListNode(carry);
+        tail = head;
+        head = head->next;
+        delete tail;
+        return head;
+    }
+};
+
 class Solution {
 public:
     ListNode *addTwoNumbers(ListNode *l1, ListNode *l2) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        if (!l1) return l2;
-        if (!l2) return l1;
-        
-        ListNode *result = new ListNode(-1); //sentinel node
-        ListNode *p1 = l1;
-        ListNode *p2 = l2;
-        ListNode *r = result;
-        
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        ListNode *head = new ListNode(0);
+        ListNode *tail = head;
         int carry = 0;
-        while (p1 && p2)
-        {
-            int sum = p1->val + p2->val + carry;
+        int sum;
+        while (l1 || l2 || carry) {
+            sum = carry;
+            if (l1) {
+                sum += l1->val;
+                l1 = l1->next;
+            }
+            if (l2) {
+                sum += l2->val;
+                l2 = l2->next;
+            }
+            tail->next = new ListNode(sum % 10);
+            tail = tail->next;
             carry = sum / 10;
-            r->next = new ListNode(sum % 10);
-            
-            p1 = p1->next;
-            p2 = p2->next;
-            r = r->next;
         }
-        
-        // let p1 pointer to the null list
-        if (p2) p1 = p2;
-        while (p1)
-        {
-            int sum = p1->val + carry;
-            carry = sum / 10;
-            r->next = new ListNode(sum % 10);
-            
-            p1 = p1->next;
-            r = r->next;
-        }
-        if (carry)
-            r->next = new ListNode(1);
-        
-        r = result;
-        result = result->next;
-        delete r;
-        return result;
+        tail = head;
+        head = head->next;
+        delete tail;
+        return head;
     }
 };
