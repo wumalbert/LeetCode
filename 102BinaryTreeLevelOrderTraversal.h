@@ -7,36 +7,54 @@
  *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
  */
+// DFS
 class Solution {
 public:
     vector<vector<int> > levelOrder(TreeNode *root) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
+        // Note: The Solution object is instantiated only once and is reused by each test case.
         vector<vector<int> > ret;
-        
         if (!root) return ret;
-        
-        queue<pair<TreeNode*, int> > levelQueue;
-        int last = -1;
-        levelQueue.push(make_pair(root, 0));
-        while (!levelQueue.empty())
-        {
-            pair<TreeNode*, int> node = levelQueue.front();
-            levelQueue.pop();
-            if (node.second != last)
-            {
-                ret.push_back(vector<int>(1, node.first->val));
-                last = node.second;
+        dfs(root, 0, ret);
+        return ret;
+    }
+private:
+    void dfs(TreeNode *root, int level, vector<vector<int> > &ans) {
+        if (level >= ans.size()) ans.push_back(vector<int>());
+        ans[level].push_back(root->val);
+        if (root->left) dfs(root->left, level+1, ans);
+        if (root->right) dfs(root->right, level+1, ans);
+    }
+};
+// BFS
+class Solution {
+public:
+    vector<vector<int> > levelOrder(TreeNode *root) {
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        vector<vector<int> > ret;
+        if (!root) return ret;
+        queue<TreeNode*> node_queue;
+        node_queue.push(root);
+        ret.push_back(vector<int>());
+        int number_current_level = 1, number_next_level = 0;
+        while (!node_queue.empty()) {
+            TreeNode *current = node_queue.front();
+            node_queue.pop();
+            --number_current_level;
+            ret.back().push_back(current->val);
+            if (current->left) {
+                node_queue.push(current->left);
+                ++number_next_level;
             }
-            else
-            {
-                ret[ret.size()-1].push_back(node.first->val);
+            if (current->right) {
+                node_queue.push(current->right);
+                ++number_next_level;
             }
-            
-            if (node.first->left) levelQueue.push(make_pair(node.first->left, node.second+1));
-            if (node.first->right) levelQueue.push(make_pair(node.first->right, node.second+1));
+            if (!number_current_level) {
+                number_current_level = number_next_level;
+                number_next_level = 0;
+                if (number_current_level) ret.push_back(vector<int>());
+            }
         }
-        
         return ret;
     }
 };
