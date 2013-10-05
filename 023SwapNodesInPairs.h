@@ -9,42 +9,17 @@
 class Solution {
 public:
     ListNode *swapPairs(ListNode *head) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        if (!head) return NULL;
-        
-        ListNode *newHead, *last, *prev, *curr;
-        prev = head;
-        curr = head->next;
-        
-        if (!curr) return head;
-        else
-        {
-            newHead = curr;
-            
-            last = curr->next;
-            curr->next = prev;
-            prev->next = last;
-            
-            last = prev;
-            curr = last->next;
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        ListNode *current = head, **ret = &head;
+        while (current && current->next) {
+            ListNode *previous = current;
+            current = current->next;
+            previous->next = current->next;
+            current->next = previous;
+            *ret = current;
+            current = previous->next;
+            ret = &(previous->next);
         }
-        
-        while (curr && curr->next)
-        {
-            prev = curr;
-            curr = curr->next;
-            
-            last->next = curr;
-            
-            last = curr->next;
-            curr->next = prev;
-            prev->next = last;
-            
-            last = prev;
-            curr = last->next;
-        }
-        
-        return newHead;
+        return head;
     }
 };
