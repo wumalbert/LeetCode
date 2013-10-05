@@ -1,25 +1,12 @@
 class Solution {
 public:
     int removeElement(int A[], int n, int elem) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        if (0 == n) return 0;
-
-        int *pResult = A;
-        int *pBegin = A;
-        int *pEnd = A+n;
-
-        while (pBegin < pEnd)
-        {
-            if (*pBegin == elem)
-            {
-                ++pBegin;
-            }
-            else
-            {
-                *pResult++ = *pBegin++;
-            }
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        int *begin = A, *end = A+n, *top = A;
+        while (begin != end) {
+            if (*begin != elem) *top++ = *begin;
+            ++begin;
         }
-        return pResult - A;
+        return top-A;
     }
 };
