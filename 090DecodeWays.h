@@ -1,30 +1,17 @@
 class Solution {
 public:
     int numDecodings(string s) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
+        // Note: The Solution object is instantiated only once and is reused by each test case.
         if (s.empty()) return 0;
-        int len = s.length();
-        vector<int> decoded(len+1, 1);
-        
-        if ('0' == s[len-1]) decoded[len-1] = 0;
-        
-        for (int i = len-2; i >= 0; --i)
-        {
-            if (s[i] > '2' || ('2' == s[i] && '6' < s[i+1]))
-            {
-                decoded[i] = decoded[i+1];
-            }
-            else if (s[i] != '0')
-            {
-                decoded[i] = decoded[i+1] + decoded[i+2];
-            }
-            else
-            {
-                decoded[i] = 0;
-            }
+        int first = 0, second = 1;
+        for (int i = 0; i < s.length(); ++i) {
+            if (!isdigit(s[i])) return 0;
+            int t = 0;
+            if ('0' != s[i]) t += second;
+            if (i > 0 && '1' == s[i-1] || ('2' == s[i-1] && '7' > s[i])) t += first;
+            first = second;
+            second = t;
         }
-        
-        return decoded[0];
+        return second;
     }
 };
