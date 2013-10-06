@@ -1,26 +1,14 @@
 class Solution {
 public:
     int reverse(int x) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        int isNeg = false;
-        if (x < 0)
-        {
-            isNeg = true;
-            x = -x;
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        long long y = 0;
+        while (x) {
+            y = y * 10 + x % 10;
+            x = x / 10;
         }
-        
-        int result = 0;
-        int quotient = x;
-        
-        while(0 != quotient / 10)
-        {
-            result += quotient % 10;
-            quotient = quotient / 10;
-            result *= 10;
-        }
-        result += quotient;
-        
-        return isNeg ? -result : result;
+        if (y > numeric_limits<int>::max()) return numeric_limits<int>::max();
+        else if (y < numeric_limits<int>::min()) return numeric_limits<int>::min();
+        else return y;
     }
 };
