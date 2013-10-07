@@ -9,42 +9,65 @@
 class Solution {
 public:
     ListNode *removeNthFromEnd(ListNode *head, int n) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        if (NULL == head) return NULL;
-        
-        ListNode *pCurrent, *pBefore;
-        
-        pCurrent = head;
-        while (pCurrent && n > 0)
-        {
-            pCurrent = pCurrent->next;
-            --n;
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        ListNode *fast=head, *slow=head;
+        int count = 0;
+        while (fast && count < n) {
+            ++count;
+            fast = fast->next;
         }
-        
-        if (!pCurrent && n > 0) return NULL; // n is larger than the length
-        
-        if (!pCurrent && n == 0) //delete the head node
-        {
-            pCurrent = head;
+        if (!fast && n == count) { // the Nth node is the head node
+            slow = head;
             head = head->next;
-            delete pCurrent;
-            
+            delete slow;
             return head;
         }
-        
-        pBefore = head;
-        while (pCurrent->next)
-        {
-            pCurrent = pCurrent->next;
-            pBefore = pBefore->next;
+        else if (!fast) return NULL;
+        else {
+            while (fast->next) {
+                fast = fast->next;
+                slow = slow->next;
+            }
+            fast = slow->next;
+            slow->next = fast->next;
+            delete fast;
+            return head;
         }
-        
-        pCurrent = pBefore->next;
-        pBefore->next = pCurrent->next;
-        
-        delete pCurrent;
-        
+    }
+};
+class Solution {
+public:
+    ListNode *removeNthFromEnd(ListNode *head, int n) {
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        ListNode **fast=&head, **slow=&head;
+        for (int i = 0; i < n; ++i) fast = &((*fast)->next);
+        while (*fast) {
+            fast = &((*fast)->next);
+            slow = &((*slow)->next);
+        }
+        ListNode *node = *slow;
+        *slow = (*slow)->next;
+        delete node;
+        return head;
+    }
+};
+class Solution {
+public:
+    ListNode *removeNthFromEnd(ListNode *head, int n) {
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        ListNode *newHead = new ListNode(-1);
+        newHead->next = head;
+        ListNode *fast=head, *slow=newHead;
+        for (int i = 0; i < n; ++i) fast = fast->next;
+        while (fast) {
+            fast = fast->next;
+            slow = slow->next;
+        }
+        fast = slow->next;
+        slow->next = fast->next;
+        delete fast;
+        head = newHead->next;
+        delete newHead;
         return head;
     }
 };
