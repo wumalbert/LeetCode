@@ -9,26 +9,42 @@
 class Solution {
 public:
     ListNode *deleteDuplicates(ListNode *head) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        if (NULL == head) return head;
-        
-        ListNode *pPrev = head, *pCurr = head->next;
-        while (pCurr)
-        {
-            if (pCurr->val == pPrev->val)
-            {
-                pPrev->next = pCurr->next;
-                delete pCurr;
-                pCurr = pPrev->next;
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        if (!head) return head;
+        ListNode *dummy = new ListNode(-1);
+        dummy->next = head;
+        ListNode *current = head, *tail = dummy;
+        while (current->next) {
+            if (current->next->val != current->val) {
+                tail->next = current;
+                tail = current;
+            } else {
+                tail->next = current->next;
+                delete current;
             }
-            else
-            {
-                pPrev = pCurr;
-                pCurr = pCurr->next;
+            current = current->next;
+        }
+        head = dummy->next;
+        delete dummy;
+        return head;
+    }
+};
+class Solution {
+public:
+    ListNode *deleteDuplicates(ListNode *head) {
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        if (NULL == head) return head;
+        ListNode *previous = head, *current = head->next;
+        while (current) {
+            if (current->val == previous->val) {
+                previous->next = current->next;
+                delete current;
+                current = previous->next;
+            } else {
+                previous = current;
+                current = current->next;
             }
         }
-        
         return head;
     }
 };
