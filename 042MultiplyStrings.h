@@ -97,3 +97,33 @@ public:
         return ret;
     }
 };
+class Solution {
+public:
+    string multiply(string num1, string num2) {
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        if (num1.empty() || num2.empty()) return "";
+        int n1 = num1.length(), n2 = num2.length();
+        reverse(num1.begin(), num1.end());
+        reverse(num2.begin(), num2.end());
+        string ret(n1+n2, 0);
+        for (int i = 0; i < n2; ++i) {
+            int carry = 0;
+            for (int j = 0; j < n1; ++j) {
+                int t = ret[i+j] + (num2[i]-'0') * (num1[j]-'0') + carry;
+                ret[i+j] = t % 10;
+                carry = t / 10;
+            }
+            ret[i+n1] = (ret[i+n1] + carry) % 10;
+        }
+        n1 += n2;
+        for (int i = 0; i < n1; ++i) ret[i] = '0' + ret[i];
+        for (n2 = n1-1; n2 >= 0 && '0' == ret[n2]; --n2) {}
+        if (n2 >= 0) {
+            ret.resize(n2+1);
+            reverse(ret.begin(), ret.end());
+        } else {
+            ret = "0";
+        }
+        return ret;
+    }
+};
