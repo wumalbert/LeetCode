@@ -9,43 +9,48 @@
 class Solution {
 public:
     ListNode *deleteDuplicates(ListNode *head) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        if (NULL == head) return NULL;
-        
-        ListNode *newHead = new ListNode(0);
-        
-        newHead->next = head;
-        
-        ListNode *pCurr = head, *pPrev = newHead;
-        while (pCurr)
-        {
-            while (pCurr->next && pCurr->next->val == pCurr->val)
-            {
-                pCurr = pCurr->next;
-            }
-            if (pCurr != pPrev->next)
-            {
-                // delete the duplicates 
-                ListNode *p = pPrev->next;
-                pCurr = pCurr->next;
-                while (p != pCurr)
-                {
-                    ListNode *q = p;
-                    p = p->next;
-                    delete q;
-                }
-                pPrev->next = pCurr;
-            }
-            else
-            {
-                pPrev = pCurr;
-                pCurr = pCurr->next;
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        if (!head) return head;
+        ListNode *dummy = new ListNode(0);
+        dummy->next = head;
+        ListNode *current = head, *tail = dummy;
+        int last = 0;
+        while (current) {
+            if ((current != head && current->val == last) || (current->next && current->next->val == current->val)) {
+                last = current->val;
+                tail->next = current->next;
+                delete current;
+                current = tail->next;
+            } else {
+                last = current->val;
+                tail->next = current;
+                current = current->next;
+                tail = tail->next;
             }
         }
-        
-        head = newHead->next;
-        delete newHead;
+        head = dummy->next;
+        delete dummy;
+        return head;
+    }
+};
+class Solution {
+public:
+    ListNode *deleteDuplicates(ListNode *head) {
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        if (!head || !head->next) return head;
+        ListNode *p = head->next;
+        if (p->val != head->val) {
+            head->next = deleteDuplicates(p);
+        } else {
+            while (p && p->val == head->val) p = p->next;
+            ListNode *t;
+            while (head != p) {
+                t = head;
+                head = head->next;
+                delete t;
+            }
+            head = deleteDuplicates(p); 
+        }
         return head;
     }
 };
