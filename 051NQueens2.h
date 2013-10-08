@@ -42,28 +42,9 @@ private:
             chessboard[row][i] = '.';
         }
     }
-    
-    void queens(int upper, int col, int ld, int rd, int& count)
-    {
-        if (col == upper)
-        {
-            ++count;
-            return;
-        }
-        
-        int row = upper & ~(col | ld | rd);
-        
-        while (row)
-        {
-            int p = row & (~row+1);
-            row ^= p;
-            
-            queens(upper, col|p, (ld|p) << 1, (rd|p) >> 1, count);
-        }
-    }
-    
+ 
 public:
-    int totalNQueens01(int n) {
+    int totalNQueens(int n) {
         // Start typing your C/C++ solution below
         // DO NOT write int main() function
         int nSolution = 0;
@@ -72,15 +53,27 @@ public:
         
         return nSolution;
     }
-    
+};
+class Solution {
+public:
     int totalNQueens(int n) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
+        // Note: The Solution object is instantiated only once and is reused by each test case.
         int count = 0;
-        int upper = (1 << n) - 1;
-        
-        queens(upper, 0, 0, 0, count);
-        
+        dfs((1<<n)-1, 0, 0, 0, count);
         return count;
+    }
+	
+private:
+    void dfs(int upper, int column, int left, int right, int &count) {
+        if (column == upper) {
+            ++count;
+            return;
+        }
+        int row = upper & ~(column | left | right);
+        while (row) {
+            int p = row & (~row+1);
+            row ^= p;
+            dfs(upper, column|p, (left|p) << 1, (right|p) >> 1, count);
+        }
     }
 };
