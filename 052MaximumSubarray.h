@@ -1,23 +1,14 @@
 class Solution {
 public:
     int maxSubArray(int A[], int n) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        if (!A || 0 == n) return 0;
-        
-        vector<int> maxSum(n, numeric_limits<int>::min());
-        
-        maxSum[0] = A[0];
-        
-        int ret = maxSum[0];
-        
-        for (int i = 1; i < n; ++i)
-        {
-            maxSum[i] = maxSum[i-1] < 0 ? A[i] : maxSum[i-1]+A[i];
-            
-            if (maxSum[i] > ret) ret = maxSum[i];
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        if (0 == n) return 0;
+        int sum = A[0], maxSum = A[0];
+        for (int i = 1; i < n; ++i) {
+            if (sum < 0) sum = A[i];
+            else sum += A[i];
+            if (sum > maxSum) maxSum = sum;
         }
-        
-        return ret;
+        return maxSum;
     }
 };
