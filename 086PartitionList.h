@@ -9,35 +9,25 @@
 class Solution {
 public:
     ListNode *partition(ListNode *head, int x) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        ListNode *newHead = new ListNode(0);
-        newHead->next = head;
-        
-        ListNode *pTail = newHead, *pCurr = newHead;
-        while (pCurr->next)
-        {
-            if (pCurr->next->val >= x)
-            {
-                pCurr = pCurr->next;
-            }
-            else if (pCurr != pTail)
-            {
-                ListNode *t = pCurr->next;
-                pCurr->next = t->next;
-                t->next = pTail->next;
-                pTail->next = t;
-                pTail = pTail->next;
-            }
-            else
-            {
-                pTail = pTail->next;
-                pCurr = pTail;
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        ListNode *dummy = new ListNode(0);
+        dummy->next = head;
+        ListNode *current = dummy, *tail = dummy;
+        while (current->next) {
+            if (current->next->val >= x) {
+                current = current->next;
+            } else if (current == tail) {
+                current = tail = current->next;
+            } else {
+                ListNode *t = current->next;
+                current->next = current->next->next;
+                t->next = tail->next;
+                tail->next = t;
+                tail = tail->next;
             }
         }
-        
-        head = newHead->next;
-        delete newHead;
+        head = dummy->next;
+        delete dummy;
         return head;
     }
 };
