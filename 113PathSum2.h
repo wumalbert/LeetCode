@@ -21,12 +21,10 @@ struct TreeNode
 };
 class Solution01 {
 private:
-    void pathSumRecursive(TreeNode *root, int sum, vector<int> &path, vector<vector<int> > &ans)
-    {
+    void pathSumRecursive(TreeNode *root, int sum, vector<int> &path, vector<vector<int> > &ans) {
         if(!root) return;
         path.push_back(root->val);
-        if (!root->left && !root->right && sum == root->val)
-        {
+        if (!root->left && !root->right && sum == root->val) {
             ans.push_back(path);
             path.pop_back();
             return;
@@ -43,7 +41,6 @@ public:
         vector<int> path;
         vector<vector<int> > ret;
         pathSumRecursive(root, sum, path, ret);
-        
         return ret;
     }
 };
@@ -56,33 +53,23 @@ public:
         // DO NOT write int main() function
         vector<vector<int> > ret;
         if (!root) return ret;
-        
         stack<TreeNode*> postStack; // post traversal
         stack<bool> postMask; // the mask of post traversal
         vector<int> path; // the presum of the post traversal 
         path.push_back(0);
-        
         TreeNode *current = root;
-        while (!postStack.empty() || current)
-        {
-            if (current)
-            {
+        while (!postStack.empty() || current) {
+            if (current) {
                 postStack.push(current);
                 postMask.push(false);
                 path.push_back(path.back() + current->val);
-                
                 current = current->left;
-            }
-            else
-            {
+            } else {
                 current = postStack.top();
-                if (!postMask.top())
-                {
+                if (!postMask.top()) {
                     postMask.top() = true;
                     current = current->right;
-                }
-                else
-                {
+                } else {
                     if (!current->left && !current->right && path.back() == sum)
                     {
                         vector<int> v;
@@ -90,14 +77,11 @@ public:
                             v.push_back(*(i+1) - *i);
                         ret.push_back(v);
                     }
-                    
                     postStack.pop();
                     postMask.pop();
                     path.pop_back();
-
                     current = NULL;
                 }
-                
             }
         }
         
