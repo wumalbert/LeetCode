@@ -9,36 +9,24 @@
 class Solution {
 public:
     void connect(TreeLinkNode *root) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        
-        TreeLinkNode *current = root;
-        // level order traversal
-        while (current)
-        {
-            TreeLinkNode *previous = NULL, *next = NULL;
-            
-            // traversal the nodes in this level
-            for (; current; current = current->next)
-            {
-                // the first node in the next level
-                if (!next) next = current->left ? current->left : current->right;
-                
-                if (current->left)
-                {
-                    if (previous) previous->next = current->left;
-                    previous = current->left;
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        TreeLinkNode *current_level = root, *next_level = new TreeLinkNode(0);
+        while (current_level) {
+            TreeLinkNode *tail = next_level;
+            while (current_level) {
+                if (current_level->left) {
+                    tail->next = current_level->left;
+                    tail = tail->next;
                 }
-                
-                if (current->right)
-                {
-                    if (previous) previous->next = current->right;
-                    previous = current->right;
+                if (current_level->right) {
+                    tail->next = current_level->right;
+                    tail = tail->next;
                 }
+                current_level = current_level->next;
             }
-            
-            // to traversal the next level
-            current = next;
+            current_level = next_level->next;
+            next_level->next = NULL;
         }
+        delete next_level;
     }
 };
