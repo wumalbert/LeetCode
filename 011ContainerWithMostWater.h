@@ -1,22 +1,18 @@
 class Solution {
 public:
     int maxArea(vector<int> &height) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        int left = 0;
-        int right = height.size()-1;
-
-        int maxarea = 0;
-        while (left < right)
-        {
-            maxarea = max(maxarea, min(height[left], height[right]) * (right - left));
-
-            if (height[left] < height[right])
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        if (height.size() < 2) return 0;
+        int max_area = 0, left = 0, right = height.size()-1;
+        while (left < right) {
+            if (height[left] < height[right]) {
+                max_area = max(max_area, height[left] * (right - left));
                 ++left;
-            else
+            } else {
+                max_area = max(max_area, height[right] * (right - left));
                 --right;
+            }
         }
-
-        return maxarea;
+        return max_area;
     }
 };
