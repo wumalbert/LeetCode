@@ -11,10 +11,15 @@ public:
                 if (j > i+1 && num[j] == num[j-1]) continue;
                 int left = j+1, right = num.size()-1;
                 while (left < right) {
+                    if (left > j+1 && num[left] == num[left-1]) {
+                        ++left;
+                        continue;
+                    }
                     int sum = num[i] + num[j] + num[left] + num[right];
                     if (sum == target) {
                         int v[4] = {num[i], num[j], num[left], num[right]};
                         ret.push_back(vector<int>(v, v+4));
+                        ++left;
                     } else if (sum < target) {
                         ++left;
                     } else {
