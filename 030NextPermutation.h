@@ -1,35 +1,26 @@
 class Solution {
-private:
-    void swap(vector<int>& num, int i, int j)
-    {
-        if (i == j) return;
-
-        num[i] = num[i]^num[j];
-        num[j] = num[i]^num[j];
-        num[i] = num[i]^num[j];
-    }
-
 public:
     void nextPermutation(vector<int> &num) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-
-        if (num.empty() || num.size() <= 1) return;
-
-        // find the first descending index, and the first larger index
-        int i = 0, j = 0;
-        for (i = num.size()-1; i > 0 && num[i] <= num[i-1]; --i);
-        if (i)
-        {
-            for (j = i; j < num.size() && num[j] > num[i-1]; ++j);   
-            swap(num, i-1, j-1);
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        if (num.size() < 2) return;
+        int first_decrease = num.size()-2; // find first decrease index
+        while (first_decrease >= 0 && num[first_decrease] >= num[first_decrease+1]) --first_decrease;
+        if (first_decrease < 0) {
+            reverse(num.begin(), num.end()-1);
+            return;
         }
-
-        // reverse the num from i to end
-        j = num.size()-1;
-        while (i < j)
-        {
-            swap(num, i++, j--);
-        }
+        int first_larger = num.size()-1;
+        while (first_larger > first_decrease && num[first_larger] <= num[first_decrease]) --first_larger;
+        swap(num.begin() + first_decrease, num.begin() + first_larger);
+        reverse(num.begin()+first_decrease+1, num.end()-1);
+    }
+private:
+    void swap(vector<int>::iterator a, vector<int>::iterator b) {
+        *a = *a ^ *b;
+        *b = *a ^ *b;
+        *a = *a ^ *b;
+    }
+    void reverse(vector<int>::iterator begin, vector<int>::iterator end) {
+        while (begin < end) swap(begin++, end--);
     }
 };
