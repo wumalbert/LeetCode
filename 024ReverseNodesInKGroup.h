@@ -9,56 +9,25 @@
 class Solution {
 public:
     ListNode *reverseKGroup(ListNode *head, int k) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        
-        if (!head) return NULL; // NULL list
-        
-        if (k <= 1) return head;
-        
-        ListNode *newHead = new ListNode(-1); //set a sentinel head node
-        ListNode *tail = newHead; //the tail node of the last group, insert each node after this tail node
-        
-        ListNode *start = head;
-        ListNode *end = head;
-        while (true)
-        {
-            int count = 1;
-            start = end;
-            while (end && count < k)
-            {
-                end = end->next;
-                ++count;
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        if (NULL == head || k <= 0) return head;
+        int size = 0;
+        for (ListNode *node = head; node != NULL; node = node->next) ++size;
+        ListNode *dummy = new ListNode(0), *tail = dummy, *node = head;
+        while (size >= k) {
+            ListNode *new_tail = node;
+            for (int i = 0; i < k; ++i) {
+                ListNode *next = node->next;
+                node->next = tail->next;
+                tail->next = node;
+                node = next;
             }
-            
-            if (end && count >= k) // to reverse the inteval
-            {
-                ListNode *newTail = start; //preserve the new tail of this group
-                ListNode *next;
-                while (start != end)
-                {
-                    next = start->next;
-                    start->next = tail->next;
-                    tail->next = start;
-                    start = next;
-                }
-                end = end->next;
-                start->next = tail->next;
-                tail->next = start;
-                
-                tail = newTail;
-            }
-            else 
-            {
-                tail->next = start;
-                
-                // delete the sentinel head node
-                tail = newHead;
-                newHead = newHead->next;
-                delete tail;
-                
-                return newHead;
-            }
+            tail = new_tail;
+            size -= k;
         }
+        tail->next = node;
+        head = dummy->next;
+        delete dummy;
+        return head;
     }
 };
