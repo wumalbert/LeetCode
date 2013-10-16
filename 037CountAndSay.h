@@ -1,38 +1,27 @@
 class Solution {
 public:
     string countAndSay(int n) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
+        // Note: The Solution object is instantiated only once and is reused by each test case.
         if (1 > n) return "";
         if (1 == n) return "1";
-
         string ret = "1";
-        for (int i = 1; i < n; ++i)
-        {
-            int j = 1;
-            int count = 1;
+        for (int i = 1; i < n; ++i) {
+            int j = 1, count = 1;
             string s;
-            while (j < ret.length())
-            {
-                if (ret[j] == ret[j-1])
+            while (j < ret.length()) {
+                if (ret[j] == ret[j-1]) {
                     ++count;
-                else
-                {
-                    char c = count + '0';
-                    s += c;
+                } else {
+                    s += static_cast<char>(count + '0');
                     s += ret[j-1];
-
                     count = 1;
                 }
                 ++j;
             }
-            char c = count + '0';
-            s += c;
+            s += static_cast<char>(count + '0');
             s += ret[j-1];
-
             ret = s;
         }
-
         return ret;
     }
 };
