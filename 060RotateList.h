@@ -9,41 +9,50 @@
 class Solution {
 public:
     ListNode *rotateRight(ListNode *head, int k) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        if (!head) return head;
-        
-        ListNode *fast, *slow;
-        slow = fast = head;
-        int len = 0;
-        while (fast)
-        {
-            ++len;
-            fast = fast->next;
-        }
-        k = k % len;
-        
-        fast = head;
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        if (!head || k <= 0) return head;
         int count = 0;
-        while (count < k && fast)
-        {
-            // if (NULL == fast->next) fast->next = head;
-            fast = fast->next;
+        ListNode *slow = head, *fast = head;
+        for (; fast; fast = fast->next) ++count;
+        k = k % count;
+        if (0 == k) return head;
+        count = 0;
+        fast = head;
+        while (count < k && fast) {
+            fast = fast->next; 
             ++count;
         }
-        
-        if (!fast) return head;
-        while (fast->next)
-        {
+        while (fast->next) {
             fast = fast->next;
             slow = slow->next;
         }
-        
         fast->next = head;
-        fast = head;
         head = slow->next;
         slow->next = NULL;
-        
+        return head;
+    }
+};
+class Solution {
+public:
+    ListNode *rotateRight(ListNode *head, int k) {
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        if (!head || k <= 0) return head;
+        ListNode *tail = head;
+        int len = 1;
+        while (tail->next) {
+            tail = tail->next;
+            ++len;
+        }
+        k = (len - k%len) % len;
+        if (k == 0) return head;
+        ListNode *node = head;
+        while (k > 1) {
+            node = node->next;
+            --k;
+        }
+        tail->next = head;
+        head = node->next;
+        node->next = NULL;
         return head;
     }
 };
