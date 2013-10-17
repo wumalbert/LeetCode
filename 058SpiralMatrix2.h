@@ -1,32 +1,22 @@
 class Solution {
 public:
     vector<vector<int> > generateMatrix(int n) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        if (0 == n) return vector<vector<int> >();
         vector<vector<int> > ret(n, vector<int>(n, 0));
-        
-        int count = 0;
-        int step = (n + 1) / 2;
-        for (int i = 0; i < step; ++i)
-        {
-            int bottom = n-1-i;
-            // the +1 horizontal direction
-            for (int j = i; j <= bottom; ++j)
-                ret[i][j] = ++count;
-            
-            // the +1 vertical direction
-            for (int j = i+1; j <= bottom; ++j)
-                ret[j][bottom] = ++count;
-            
-            // the -1 horizontal direction
-            if (bottom == i) continue;
-            
-            for (int j = bottom-1; j >= i; --j)
-                ret[bottom][j] = ++count;
-                
-            // the -1 vertical direction
-            for (int j = bottom-1; j > i; --j)
-                ret[j][i] = ++count;
+        for (int i = 0, number = 0; i < (n+1)/2; ++i) {
+            for (int j = i; j < n-i; ++j) {
+                ret[i][j] = ++number;
+            }
+            for (int j = i+1; j < n-i; ++j) {
+                ret[j][n-i-1] = ++number;
+            }
+            for (int j = n-i-2; j >= i; --j) {
+                ret[n-i-1][j] = ++number;
+            }
+            for (int j = n-i-2; j > i; --j) {
+                ret[j][i] = ++number;
+            }
         }
         return ret;
     }
