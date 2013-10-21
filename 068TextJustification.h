@@ -1,73 +1,36 @@
 class Solution {
 public:
     vector<string> fullJustify(vector<string> &words, int L) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-
-        //if the length of a word is larger than L ??
-        if (1 == L) return words;
-
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        if (words.empty()) return words;
         vector<string> ret;
-        int count = 0;
-        int last = 0;
-        int i = 0;
-        for (i = 0; i < words.size(); ++i)
-        {
-            if ((i == 0 && count+words[i].length() > L) || (i > 0 && count+1+words[i].length() > L))
-            {
-                string str;
-                int totalSpace = L - count;
-                int nSep = i - last - 1;
-
-                if (0 == nSep)
-                {
-                    str += words[last];
-                    str += string(totalSpace, ' ');
-                    ret.push_back(str);
-
-                    count = words[i].length();
-                    last = i;
-                    continue;
+        for (vector<string>::iterator current = words.begin(); current != words.end(); ) {
+            vector<string>::iterator last = current;
+            int line_length = current->length(), number_words = 1;
+            for (++current; current != words.end() && line_length+current->length()+1 <= L; ++current, ++number_words)
+                line_length += current->length() + 1;
+            if (current != words.end()) {
+                if (number_words == 1) {
+                    ret.push_back(*last + string(L-line_length, ' '));
+                } else {
+                    int t = (L-line_length)/(number_words-1) + 1;
+                    string blank_left(t + 1, ' '), blank_right(t, ' ');
+                    t = (L-line_length)%(number_words-1);
+                    string line(*last);
+                    for (++last; last != current && t > 0; ++last, --t)
+                        line.append(blank_left).append(*last);
+                    for (; last != current; ++last)
+                        line.append(blank_right).append(*last);
+                    ret.push_back(line);
                 }
-                int t = last + totalSpace % nSep-1;
-                string s1(totalSpace/nSep+2, ' ');
-                string s2(totalSpace/nSep+1, ' ');
-
-                int j;
-                for (j = last; j <= t; ++j)
-                {
-                    str += words[j];
-                    str += s1;
-                }
-                for (; j < i-1; ++j)
-                {
-                    str += words[j];
-                    str += s2;
-                }
-                str += words[j];
-                ret.push_back(str);
-
-                count = words[i].length();
-                last = i;
-            }
-            else
-            {
-                if (i == last) count += words[i].length();
-                else count += 1 + words[i].length();
+            } else {
+                string line(*last);
+                for (++last; last != current; ++last)
+                    line.append(" ").append(*last);
+                line.append(L-line_length, ' ');
+                ret.push_back(line);
             }
         }
-
-        // the last line
-        string str;
-        for(int j = last; j < i-1; ++j)
-        {
-            str += words[j];
-            str += " ";
-        }
-        str += words[i-1];
-        str += string(L-str.length(), ' ');
-        ret.push_back(str);
-
         return ret;
     }
 };
