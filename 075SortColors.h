@@ -1,28 +1,36 @@
 class Solution {
 public:
     void sortColors(int A[], int n) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        int *pRed, *pWhite, *pBlue;
-        pRed = pWhite = A-1;
-        pBlue = A;
-        int *pEnd = A + n;
-        while (pBlue != pEnd)
-        {
-            if (2 == *pBlue)
-            {
-                ++pBlue;
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        int *red = A, *white = A, *blue = A, *end = A+n;
+        while (blue != end) {
+            if (*blue == 2) {
+                ++blue;
+            } else if (*blue == 1) {
+                *blue++ = 2;
+                *white++ = 1;
+            } else if (*blue == 0) {
+                *blue++ = 2;
+                *white++ = 1;
+                *red++ = 0;
             }
-            else if (1 == *pBlue)
-            {
-                *pBlue++ = 2;
-                *(++pWhite) = 1;
-            }
-            else if (0 == *pBlue)
-            {
-                *pBlue++ = 2;
-                *(++pWhite) = 1;
-                *(++pRed) = 0;
+        }
+    }
+};
+class Solution {
+public:
+    void sortColors(int A[], int n) {
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        int *red = A, *white = A, *blue = A+n-1;
+        while (white <= blue) {
+            if (*white == 1) {
+                ++white;
+            } else if (*white == 0) {
+                *white++ = 1;
+                *red++ = 0;
+            } else if (*white == 2) {
+                *white = *blue;
+                *blue-- = 2;
             }
         }
     }
