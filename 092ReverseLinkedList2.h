@@ -9,36 +9,27 @@
 class Solution {
 public:
     ListNode *reverseBetween(ListNode *head, int m, int n) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        ListNode *newHead = new ListNode(0);
-        newHead->next = head;
-
-        ListNode *pTailFront = newHead, *pTailBack = newHead, *pNode = head;
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        if (!head) return head;
+        ListNode *dummy = new ListNode(0), *tail = dummy, *current = head;
+        dummy->next = head;
         int count = 1;
-        while(pNode && count < m)
-        {
-            pTailFront = pNode;
-            pNode = pNode->next;
+        while (count < m) {
+            current = current->next;
+            tail = tail->next;
             ++count;
         }
-        pTailBack = pNode;
-        pNode = pNode->next;
-        ++count;
-        while(pNode && count <= n)
-        {
-            ListNode *t = pNode->next;
-            pNode->next = pTailFront->next;
-            pTailFront->next = pNode;
-            
-            pNode = t;
+        ListNode *reverse_tail = current;
+        while (count <= n) {
+            ListNode *next = current->next;
+            current->next = tail->next;
+            tail->next = current;
+            current = next;
             ++count;
         }
-        
-        pTailBack->next = pNode;
-        
-        head = newHead->next;
-        delete newHead;
+        reverse_tail->next = current;
+        head = dummy->next;
+        delete dummy;
         return head;
     }
 };
