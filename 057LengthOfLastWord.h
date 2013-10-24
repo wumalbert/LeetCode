@@ -1,22 +1,31 @@
 class Solution {
 public:
     int lengthOfLastWord(const char *s) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
-        if (!s) return 0;
-        
-        // 1. find the end of string
-        const char *start = s, *end = s;
-        for (end = s; '\0' != *end; ++end);
-        
-        // 2. find the last not ' ' character 
-        for (--end; end != s-1 && ' ' == *end; --end);
-        
-        if (end == s-1) return 0;
-        
-        // 3. find the start postion of the last word
-        for (start = end; start != s-1 && ' ' != *start; --start);
-        
-        return end - start;
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        const char *c = s;
+        while (*c != '\0') ++c;
+        for (--c; c >= s && *c == ' '; --c);
+        int count = 0;
+        while (c >= s && *c != ' ') {
+            ++count;
+            --c;
+        }
+        return count;
+    }
+};
+class Solution {
+public:
+    int lengthOfLastWord(const char *s) {
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        const char *c = s;
+        int len = 0;
+        for (const char *c = s; *c != '\0'; ++c) {
+            if (*c == ' ') {
+                len = 0;
+            } else {
+                ++len;
+            }
+        }
+        return len;
     }
 };
