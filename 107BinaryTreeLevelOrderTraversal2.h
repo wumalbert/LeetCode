@@ -10,34 +10,52 @@
 class Solution {
 public:
     vector<vector<int> > levelOrderBottom(TreeNode *root) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
+        // Note: The Solution object is instantiated only once and is reused by each test case.
         vector<vector<int> > ret;
         if (!root) return ret;
-        
-        int last = -1;
-        queue<pair<TreeNode*, int> > levelQueue;
-        levelQueue.push(make_pair(root, 0));
-        
-        while (!levelQueue.empty())
-        {
-            pair<TreeNode*, int> node = levelQueue.front();
-            levelQueue.pop();
-            
-            if (node.second != last)
-            {
-                ret.insert(ret.begin(), vector<int>(1, node.first->val));
-                last = node.second;
+        queue<TreeNode *> level_queue;
+        level_queue.push(root);
+        ret.push_back(vector<int>());
+        int nodes_current_level = 1, nodes_next_level = 0;
+        while (!level_queue.empty()) {
+            TreeNode *node = level_queue.front();
+            level_queue.pop();
+            --nodes_current_level;
+            ret[0].push_back(node->val);
+            if (node->left) {
+                level_queue.push(node->left);
+                ++nodes_next_level;
             }
-            else
-            {
-                ret[0].push_back(node.first->val);
+            if (node->right) {
+                level_queue.push(node->right);
+                ++nodes_next_level;
             }
-            
-            if (node.first->left) levelQueue.push(make_pair(node.first->left, node.second+1));
-            if (node.first->right) levelQueue.push(make_pair(node.first->right, node.second+1));
+            if (0 == nodes_current_level) {
+                if (nodes_next_level > 0) ret.insert(ret.begin(), vector<int>());
+                nodes_current_level = nodes_next_level;
+                nodes_next_level = 0;
+            }
         }
-        
         return ret;
+    }
+};
+class Solution {
+public:
+    vector<vector<int> > levelOrderBottom(TreeNode *root) {
+        // Note: The Solution object is instantiated only once and is reused by each test case.
+        vector<vector<int> > ret;
+        if (!root) return ret;
+        dfs(root, 0, ret);
+        reverse(ret.begin(), ret.end());
+        return ret;
+    }
+private:
+    void dfs(TreeNode *root, int level, vector<vector<int> > &ans) {
+        if (level >= ans.size()) {
+            ans.push_back(vector<int>());
+        }
+        ans[level].push_back(root->val);
+        if (root->left) dfs(root->left, level+1, ans);
+        if (root->right) dfs(root->right, level+1, ans);
     }
 };
