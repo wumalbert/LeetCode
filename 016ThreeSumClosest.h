@@ -3,44 +3,20 @@ public:
     int threeSumClosest(vector<int> &num, int target) {
         // Start typing your C/C++ solution below
         // DO NOT write int main() function
-        if (num.size() < 3)
-        {
-            return 0;
-        }
-
+        if(num.size() < 3) return 0;
         sort(num.begin(), num.end());
-
-        int ret = 0;
-        int minDiff = numeric_limits<int>::max();
-
-        for (size_t i = 0; i < num.size()-2; ++i)
-        {
+        int closest = target > 0 ? numeric_limits<int>::max() : numeric_limits<int>::max() + target;
+        for (int i = 0; i < num.size()-2; ++i) {
             if (i > 0 && num[i] == num[i-1]) continue;
-
-            size_t left = i+1;
-            size_t right = num.size()-1;
-            while (left < right)
-            {
-                int t = num[i] + num[left] + num[right];
-
-                if (t == target)
-                {
-                    return t;
-                }
-
-                if (abs(t-target) < minDiff)
-                {
-                    ret = t;
-                    minDiff = abs(t-target);
-                }
-
-                if (t < target)
-                    ++left;
-                else if (t > target)
-                    --right;
+            int left = i+1, right = num.size()-1;
+            while (left < right) {
+                int sum = num[i] + num[left] + num[right];
+                if (abs(sum - target) < abs(closest - target)) closest = sum;
+                if (sum == target) return closest;
+                else if (sum < target) ++left;
+                else --right;
             }
         }
-
-        return ret;
+        return closest;
     }
 };
